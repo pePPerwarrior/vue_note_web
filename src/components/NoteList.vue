@@ -1,22 +1,28 @@
 <template>
     <div >
+        <!-- {{ results }} -->
         <div class="addNoteBlock" v-if="isShowAddNode">
-            <NoteAddNote></NoteAddNote>
+            <NoteAddNote @closeWindow="sendAddNote"></NoteAddNote>
         </div>
         <ul>
-            <li v-for="result in results">
-                {{result.note}}
-                <br>
+            <li v-for="(result,key) in results" :key="key"> 
+                <div style="font-size:1.5em;font-weight: bold;">
+                    {{result.note}} {{ key }}
+                </div>  
+                
+                <!-- no.{{ key }} -->
                 <span>     
                     {{ result.content }}
                 </span>
+                <hr>
                 <div >
                     <button>edit</button>
-                    <button>delete</button>
+                    <button @click="delNote()">delete</button>
                 </div>
                 
             </li>
-            <li @click="addNote();loadExperiences()" >add Note</li>
+            <!-- <li @click="addNote();loadExperiences()" >add Note</li> -->
+            <li @click="addNote()" class="addNote" ><i class="fa-solid fa-plus"></i></li>
         </ul>
     </div>
 </template>
@@ -27,9 +33,7 @@ export default{
     components:{NoteAddNote},
     data(){
         return{
-            isShowAddNode: true,
-            // notes:['apple','dog','bird','tom','apple','dog','bird','tom','apple','dog','bird'],
-            // content:'qwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytreweqwertyuirwertyuioiuytrewe',
+            isShowAddNode: false,
             results:[],
         }
     },
@@ -44,28 +48,46 @@ export default{
             })
             .then((data) => {
                 const results = [];
-                
-                
-                
                 for (const id in data) {
                     results.push({
+                        id:id,
                         note:data[id].title,
                         content:data[id].content
-                    })
-                    
+                    })               
                 }
                 this.results = results;
-                
-                
+                console.log(this.results);
             })
             
         },
-        addNote(){
-            this.isShowAddNode = !this.isShowAddNode;
-            
-            
+        // sendAddNote(val1,val2){
+        //     this.isShowAddNode = false;
+        //     if(val1 > 1){                   
+        //     // 當一個欄位不為空時 推送進results印出 (暫存區)    
+        //     this.results.push({
+        //                 id:0,
+        //                 note:val1,
+        //                 content:val2
+        //             }) 
+        //     console.log(this.results); 
+        //     }
+        // },
+        sendAddNote(){
+            this.isShowAddNode = false;
+            setTimeout(this.loadExperiences,1000); //延遲載入
         },
+        addNote(){
+            this.isShowAddNode = !this.isShowAddNode; 
+              
+        },
+        delNote(){
+
+        }
+        
     },
+    mounted(){
+        this.loadExperiences();
+    }
     
 }
 </script>
@@ -77,6 +99,7 @@ ul {
     display: flex;
     flex-wrap: wrap;
     text-align: center;
+    /* justify-content: space-evenly */
 }
 
 li {
@@ -91,40 +114,47 @@ li {
     width: 200px;
     margin: 10px;
     word-wrap: break-word;
-    
+    display:block;
     border-radius: 10px;
     box-shadow:  9px 9px 18px #b3b3b3,
              -9px -9px 18px #ffffff;
     overflow-y: scroll;
+    scrollbar-width: 100px;
+}
+.addNote{
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    height: 200px;
+    width: 200px;
+    margin: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+li i {
+    font-size: 70px;
+    color: gainsboro;
 }
 
 li span {
-    font-size: 12px;
+    display: block;
+    font-size: 1em;
     text-align: justify;
     word-wrap: break-word;
     overflow-y: scroll;
+    padding: 1rem 0;
+    
 }
 button {
     margin: auto;
 }
-.addNoteBlock{
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 400px;
-    height: 300px;
-    background-color: white;
-    border: 1px solid #ccc;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    border-radius: 8px;
-    /* display: flex;
-    flex-direction: column; */
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    z-index: 3;
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* make scrollbar transparent */
 }
+
 
 </style>
