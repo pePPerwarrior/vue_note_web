@@ -7,7 +7,8 @@
         <ul>
             <li v-for="(result,key) in results" :key="key"> 
                 <div style="font-size:1.5em;font-weight: bold;">
-                    {{result.note}} {{ key }}
+                    {{result.note}} 
+                    <!--{{ key }} -->
                 </div>  
                 
                 <!-- no.{{ key }} -->
@@ -99,7 +100,7 @@ ul {
     display: flex;
     flex-wrap: wrap;
     text-align: center;
-    /* justify-content: space-evenly */
+    justify-content: space-evenly
 }
 
 li {
